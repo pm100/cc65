@@ -27,8 +27,10 @@ OutData         = regbank+4             ; Function parameters
 ; ----------------------------------------------------------------------------
 ; Other zero page cells
 
-
 FChar           = tmp1
+Width = ptr4
+Base = tmp2
+
 
 
 
@@ -371,24 +373,25 @@ SizeSkip: ; entry when we already have next format char loaded
         ;       }
         ;       case 'n':
 @Ln:    cmp     #'n'
-        bne     @Lpct
-        jsr     GetIntArg ; y = 0 after
-        sta     ptr2     ; pointer to variable
-        stx     ptr2+1   ; to receive the count
-        lda     (OutData),y   ; always store lsb first
-        sta     (ptr2),y
-        bit     HHMod   ; 1 byte arg?
-        bmi     @Endn       ; thats all folks
-        iny
-        lda     (OutData),y   ; now either 2 or 4 bytes
-        sta     (ptr2),y  ; store byte 2
-        bit     LMod      ; 4 bytes?
-        bpl     @Endn
-        lda     #0         ; 4 bytes, store 0 into bytes 3 & 4
-        iny
-        sta     (ptr2),y
-        iny
-        sta     (ptr2),y
+jmp    @Lpct
+        ; bne     @Lpct
+        ; jsr     GetIntArg ; y = 0 after
+        ; sta     ptr2     ; pointer to variable
+        ; stx     ptr2+1   ; to receive the count
+        ; lda     (OutData),y   ; always store lsb first
+        ; sta     (ptr2),y
+        ; bit     HHMod   ; 1 byte arg?
+        ; bmi     @Endn       ; thats all folks
+        ; iny
+        ; lda     (OutData),y   ; now either 2 or 4 bytes
+        ; sta     (ptr2),y  ; store byte 2
+        ; bit     LMod      ; 4 bytes?
+        ; bpl     @Endn
+        ; lda     #0         ; 4 bytes, store 0 into bytes 3 & 4
+        ; iny
+        ; sta     (ptr2),y
+        ; iny
+        ; sta     (ptr2),y
 @Endn:  rts
         ;               break;
         ;       case '%':
@@ -757,7 +760,7 @@ MaybeLower:
 ;==============================================================
 DoNumber:
 
-        jsr NumberIntro
+        jsr     NumberIntro
 ;       intmax_t v = va_arg(*args, intmax_t);
         jsr     GetSignedArg
 
@@ -822,10 +825,10 @@ DoNumber:
 ;--------------------------------------------------------
 
 DoUNumber:
-        jsr ClearSignBlank
-        jsr NumberIntro
+        jsr     ClearSignBlank
+        jsr     NumberIntro
 ;       v= va_arg(*args, uintmax_t);
-        jsr GetUnsignedArg
+        jsr     GetUnsignedArg
 ;============================
 ; big special case for octal
 ;============================
@@ -1186,7 +1189,7 @@ CharArg:        .byte   0
 ; Format variables
 FormatVars:
 LeftJust:       .byte   0
-Base:           .byte   0
+;Base:           .byte   0
 AddSign:        .byte   0
 AddBlank:       .byte   0
 PadZero:        .byte   0
@@ -1194,7 +1197,7 @@ Pad:            .word   0
 ZPad:           .word   0
 AltForm:        .byte   0
 PadChar:        .byte   0
-Width:          .word   0
+;Width:          .word   0
 Precision:      .word   0
 PrecisionSet:   .byte   0
 IsNumber:       .byte   0
