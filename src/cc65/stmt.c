@@ -569,7 +569,8 @@ static int CompoundStatement (int* PendingToken)
 
     /* Emit references to imports/exports for this block */
     EmitExternals ();
-
+    /* emit debug info for any locals */
+    EmitDebugInfo ();
     /* Leave the lexical level */
     LeaveBlockLevel ();
 
