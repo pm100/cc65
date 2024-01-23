@@ -1030,10 +1030,28 @@ void PrintExportLabels (FILE* F)
     for (I = 0; I < ExpCount; ++I) {
         const Export* E = ExpPool [I];
         fprintf (F, "al %06lX .%s\n", GetExportVal (E), GetString (E->Name));
+
     }
 }
 
+void PrintExportDbgFile (FILE* F, unsigned LastId)
+{
+    unsigned I;
 
+    /* Print all linker defined exports */
+    for (I = 0; I < ExpCount; ++I) {
+        const Export* E = ExpPool[I];
+        if (E->Obj == NULL) {
+            /* Emit the base data for the entry */
+            fprintf (F,
+                "sym\tid=%u,name=\"%s\",addrsize=%s,val=0x%04x\n",
+                ++LastId,
+                GetString (E->Name),
+                AddrSizeToStr ((unsigned char)E->AddrSize),
+                GetExprVal (E->Expr));
+        }
+    }
+}
 
 void MarkExport (Export* E)
 /* Mark the export */

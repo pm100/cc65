@@ -348,10 +348,11 @@ unsigned HLLDbgSymCount (void)
 
 
 
-void PrintDbgSyms (FILE* F)
+unsigned PrintDbgSyms (FILE* F)
 /* Print the debug symbols in a debug file */
 {
-    unsigned I, J;
+    unsigned I, J, LastId;
+
 
     for (I = 0; I < CollCount (&ObjDataList); ++I) {
 
@@ -375,7 +376,7 @@ void PrintDbgSyms (FILE* F)
             if (S->Size != 0) {
                 fprintf (F, ",size=%u", S->Size);
             }
-
+            LastId = O->SymBaseId + J;
             /* For cheap local symbols, add the owner symbol, for others,
             ** add the owner scope.
             */
@@ -438,6 +439,7 @@ void PrintDbgSyms (FILE* F)
             fputc ('\n', F);
         }
     }
+    return LastId;
 }
 
 

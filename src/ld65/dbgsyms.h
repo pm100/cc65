@@ -76,7 +76,7 @@ DbgSym* ReadDbgSym (FILE* F, ObjData* Obj, unsigned Id);
 struct HLLDbgSym* ReadHLLDbgSym (FILE* F, ObjData* Obj, unsigned Id);
 /* Read a hll debug symbol from a file, insert and return it */
 
-void PrintDbgSyms (FILE* F);
+unsigned PrintDbgSyms (FILE* F);
 /* Print the debug symbols in a debug file */
 
 unsigned DbgSymCount (void);

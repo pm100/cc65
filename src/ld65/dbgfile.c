@@ -99,11 +99,12 @@ static void AssignIds (void)
     AssignLineInfoIds ();
 }
 
-
+void PrintExportDbgFile (FILE* F, unsigned);
 
 void CreateDbgFile (void)
 /* Create a debug info file */
 {
+    unsigned LastId;
     /* Open the debug info file */
     FILE* F = fopen (DbgFileName, "w");
     if (F == 0) {
@@ -157,10 +158,10 @@ void CreateDbgFile (void)
 
     /* Output scopes */
     PrintDbgScopes (F);
-
+ 
     /* Output symbols */
-    PrintDbgSyms (F);
-
+    LastId = PrintDbgSyms (F);
+    PrintExportDbgFile (F, LastId);
     /* Output types */
     PrintDbgTypes (F);
 
